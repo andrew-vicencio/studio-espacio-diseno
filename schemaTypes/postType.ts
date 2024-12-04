@@ -31,11 +31,47 @@ export const postType = defineType({
     defineField({
       name: 'image',
       type: 'image',
+      title: 'Main Image',
+      options: {
+        hotspot: true
+      },
+      fields: [
+        defineField({
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative text',
+          validation: rule => rule.custom((value, context) => {
+            const parent = context?.parent as {asset?: {_ref?: string}}
+        
+            return !value && parent?.asset?._ref ? 'Alt text is required when an image is present' : true
+          }),
+        })
+      ]
     }),
     defineField({
       name: 'body',
       type: 'array',
-      of: [{type: 'block'}],
+      of: [
+        {type: 'block'},
+        {
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative text',
+              validation: rule => rule.custom((value, context) => {
+                const parent = context?.parent as {asset?: {_ref?: string}}
+            
+                return !value && parent?.asset?._ref ? 'Alt text is required when an image is present' : true
+              }),
+            })
+          ]
+        }
+      ],
       group: 'main-text',
     }),
     defineField({
@@ -45,6 +81,16 @@ export const postType = defineType({
       hidden: ({ document }) => !document?.body,
       group: 'main-text',
     }),
+    {
+      name: 'tags',
+      type: 'array',
+      of: [
+        { 
+          type: 'reference',
+          to: [{ type: 'tag' }]
+        }
+      ]
+    }
   ],
   preview: {
     select: {

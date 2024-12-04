@@ -31,5 +31,14 @@ export const projectType = defineType({
         type: 'array',
         of: [ { type: 'image' } ]
     }),
+    {
+      name: 'body',
+      type: 'array',
+      of: [ {type: 'block'} ],
+    },
+    {
+      name: 'featured',
+      type: 'boolean',
+    }
   ],
 })
